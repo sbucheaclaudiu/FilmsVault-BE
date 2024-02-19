@@ -1,4 +1,4 @@
-package server.SpotifyMovies.model.dto;
+package server.SpotifyMovies.dto;
 
 
 public class MovieShortDTO {

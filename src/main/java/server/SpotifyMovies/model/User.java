@@ -2,6 +2,7 @@ package server.SpotifyMovies.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,11 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "_user")
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -41,6 +42,9 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy="user")
+    private Set<Playlist> playlists;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

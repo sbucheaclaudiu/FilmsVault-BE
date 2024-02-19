@@ -1,8 +1,10 @@
 package server.SpotifyMovies.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import server.SpotifyMovies.model.id.ListMovieId;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,13 +12,20 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "movies_list")
+@Table(name = "Movies")
+@AllArgsConstructor
+@Getter
+@Setter
 public class Movie implements Serializable {
-    @EmbeddedId
-    private ListMovieId listMoviesId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "movie")
+    private List<PlaylistMovie> playlistMovies;
 
     @Column
-    private String id;
+    private Long tmdbId;
 
     @Column
     private String movieName;
@@ -36,77 +45,5 @@ public class Movie implements Serializable {
     @Column
     private String imagePath;
 
-    @Column
-    private double rating;
-
-    @Column
-    @Temporal(TemporalType.DATE)
-    private LocalDate dateAddedToList;
-
-
     public Movie(){}
-
-    public ListMovieId getListMoviesId() {
-        return listMoviesId;
-    }
-
-    public void setListMoviesId(ListMovieId listMoviesId) {
-        this.listMoviesId = listMoviesId;
-    }
-
-    public String getMovieName() {
-        return movieName;
-    }
-
-    public void setMovieName(String movieName) {
-        this.movieName = movieName;
-    }
-
-    public long getReleaseYear() {
-        return releaseYear;
-    }
-
-    public void setReleaseYear(long releaseYear) {
-        this.releaseYear = releaseYear;
-    }
-
-    public String getGenres() {
-        return genres;
-    }
-
-    public void setGenres(String genres) {
-        this.genres = genres;
-    }
-
-    public String getUserDescription() {
-        return userDescription;
-    }
-
-    public void setUserDescription(String userDescription) {
-        this.userDescription = userDescription;
-    }
-
-    public double getUserRating() {
-        return userRating;
-    }
-
-    public void setUserRating(double userRating) {
-        this.userRating = userRating;
-    }
-
-    public double getImdbRating() {
-        return rating;
-    }
-
-    public void setImdbRating(double imdbRating) {
-        this.rating = imdbRating;
-    }
-
-    public LocalDate getDateAddedToList() {
-        return dateAddedToList;
-    }
-
-    public void setDateAddedToList(LocalDate dateAddedToList) {
-        this.dateAddedToList = dateAddedToList;
-    }
 }

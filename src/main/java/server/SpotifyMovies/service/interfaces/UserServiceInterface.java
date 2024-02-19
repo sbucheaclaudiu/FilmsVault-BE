@@ -2,11 +2,10 @@ package server.SpotifyMovies.service.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import server.SpotifyMovies.model.User;
-import server.SpotifyMovies.model.dto.JwtAuthenticationResponse;
-import server.SpotifyMovies.model.dto.SignupDTO;
+import server.SpotifyMovies.dto.JwtAuthenticationResponse;
+import server.SpotifyMovies.dto.SignupDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserServiceInterface {
     UserDetailsService userDetailsService();
@@ -16,4 +15,6 @@ public interface UserServiceInterface {
     JwtAuthenticationResponse verifySignup(SignupDTO signupDTO);
 
     User getUserByEmail(String email);
+
+    User getUserById(Long id);
 }

@@ -1,27 +1,25 @@
 package server.SpotifyMovies.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import server.SpotifyMovies.model.id.FollowersId;
 
 import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name = "followers")
+@AllArgsConstructor
+@Getter
+@Setter
+@Table(name = "Followers")
 public class Followers implements Serializable {
     @EmbeddedId
-    private FollowersId followersId;
-
+    private FollowersId id;
 
     public Followers() {
     }
 
-    public FollowersId getFollowersId() {
-        return followersId;
-    }
-
-    public void setFollowersId(FollowersId followersId) {
-        this.followersId = followersId;
-    }
 }

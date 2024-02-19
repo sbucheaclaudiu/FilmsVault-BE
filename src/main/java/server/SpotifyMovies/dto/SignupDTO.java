@@ -1,4 +1,4 @@
-package server.SpotifyMovies.model.dto;
+package server.SpotifyMovies.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,15 +8,33 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-public class LoginDTO {
-
+public class SignupDTO {
+    private String name;
+    private String username;
     private String email;
-
     private String password;
 
-    public LoginDTO(String email, String password) {
+    public SignupDTO(String name, String username, String email, String password) {
+        this.name = name;
+        this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {

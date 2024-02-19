@@ -15,11 +15,11 @@ public class FollowersId implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "followedUser")
-    private User folloersUser;
+    private User followedUser;
 
-    public FollowersId(User user, User folloersUser) {
+    public FollowersId(User user, User followedUser) {
         this.user = user;
-        this.folloersUser = folloersUser;
+        this.followedUser = followedUser;
     }
 
     public FollowersId() {

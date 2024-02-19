@@ -1,8 +1,8 @@
 package server.SpotifyMovies.security;
 
-import server.SpotifyMovies.model.dto.JwtAuthenticationResponse;
-import server.SpotifyMovies.model.dto.LoginDTO;
-import server.SpotifyMovies.model.dto.SignupDTO;
+import server.SpotifyMovies.dto.JwtAuthenticationResponse;
+import server.SpotifyMovies.dto.LoginDTO;
+import server.SpotifyMovies.dto.SignupDTO;
 
 public interface AuthenticationService {
     JwtAuthenticationResponse signup(SignupDTO request);

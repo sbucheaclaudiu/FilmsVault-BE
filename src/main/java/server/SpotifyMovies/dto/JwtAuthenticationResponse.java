@@ -1,6 +1,7 @@
-package server.SpotifyMovies.model.dto;
+package server.SpotifyMovies.dto;
 
 import lombok.*;
+import server.SpotifyMovies.model.User;
 
 @Data
 @Builder
@@ -10,9 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 public class JwtAuthenticationResponse {
     private String token;
+
+    private UserDTO user;
+
     private String validEmail;
+
     private String validUsername;
+
     private boolean validData;
-    private String username;
-    private String profile_url;
 }
