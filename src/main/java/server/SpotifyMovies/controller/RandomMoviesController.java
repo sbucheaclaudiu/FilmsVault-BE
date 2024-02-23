@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Random;
 
 @Controller
-@RequestMapping("/moviesVault/getMovies")
+@RequestMapping("/moviesVault/getRandomMovies")
 @CrossOrigin
-public class MoviesController {
+public class RandomMoviesController {
     @Autowired
     private TMDBAPIServiceInterface movieService;
 
