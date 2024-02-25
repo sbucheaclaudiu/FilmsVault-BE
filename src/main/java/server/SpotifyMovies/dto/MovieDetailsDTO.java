@@ -36,21 +36,4 @@ public class MovieDetailsDTO {
         this.genres = genres;
     }
 
-    @Override
-    public String toString() {
-        return "MovieDetailsDTO{" +
-                "movieId='" + movieId + '\'' +
-                ", type='" + type + '\'' +
-                ", posterPath='" + posterPath + '\'' +
-                ", backdropPath='" + backdropPath + '\'' +
-                ", movieName='" + movieName + '\'' +
-                ", overview='" + overview + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
-                ", runtime='" + runtime + '\'' +
-                ", rating=" + rating +
-                ", budget=" + budget +
-                ", revenue=" + revenue +
-                ", genres='" + genres + '\'' +
-                '}';
-    }
 }

@@ -3,10 +3,7 @@ package server.SpotifyMovies.service.implementation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
-import server.SpotifyMovies.dto.MovieDetailsDTO;
-import server.SpotifyMovies.dto.MovieShortDTO;
-import server.SpotifyMovies.dto.PersonShortDTO;
-import server.SpotifyMovies.dto.VideoDTO;
+import server.SpotifyMovies.dto.*;
 import server.SpotifyMovies.service.interfaces.TMDBAPIServiceInterface;
 
 import java.io.IOException;
@@ -17,12 +14,15 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 public class TMDBAPIService implements TMDBAPIServiceInterface {
     private final String apiKey = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMjNhMzgzMDM2YjZjMWFhOWI0YmNmMzY0YWZkOTRkMyIsInN1YiI6IjY1NzM1ZDBiMDA2YjAxMDBlMWE5N2JhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.PaamffUcloAVp0SaezXIMBzXUhnXD0Lrv-gNLZ1huYs";
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    private Random random = new Random();
 
 
     private HttpResponse<String> apiCall(String apiUrl) {
@@ -192,6 +192,125 @@ public class TMDBAPIService implements TMDBAPIServiceInterface {
         return null;
     }
 
+    private TVDetailsDTO createTVDetails(JsonNode jsonNode){
+        String id = jsonNode.get("id").asText();
+        String type = "tv";
+        String posterPath =  "https://image.tmdb.org/t/p/original" + jsonNode.get("poster_path").asText();
+        String backdropPath = "https://image.tmdb.org/t/p/original" + jsonNode.get("backdrop_path").asText();
+        String name = jsonNode.get("name").asText();
+        String overview = jsonNode.get("overview").asText();
+        String releaseDate = jsonNode.get("first_air_date").asText();
+        String lastDate = jsonNode.get("last_air_date").asText();
+        String noOfSeasons = jsonNode.get("number_of_seasons").asText();
+        String noOfEpisods = jsonNode.get("number_of_episodes").asText();
+        double rating = jsonNode.get("vote_average").asDouble();
+        String genres = "";
+
+        JsonNode genresNode = jsonNode.get("genres");
+
+        if (genresNode != null && genresNode.isArray()) {
+            StringBuilder genresStringBuilder = new StringBuilder();
+
+            for (JsonNode genreNode : genresNode) {
+                String genreName = genreNode.get("name").asText();
+                genresStringBuilder.append(genreName).append(", ");
+            }
+
+            genres = genresStringBuilder.toString().replaceAll(", $", "");
+
+        }
+
+        return new TVDetailsDTO(id, type, backdropPath, posterPath, name, overview, releaseDate, lastDate, noOfSeasons, noOfEpisods, rating, genres);
+    }
+
+    @Override
+    public TVDetailsDTO getTVDetails(String id) {
+        String apiUrl = "https://api.themoviedb.org/3/tv/" + id + "?language=en-US";
+
+        try {
+            HttpResponse<String> response = apiCall(apiUrl);
+            if (response != null && response.statusCode() == 200) {
+                String jsonResponse = response.body();
+
+                JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+                return createTVDetails(jsonNode);
+
+            }
+            else {
+                System.out.println("Eroare la efectuarea request-ului. Codul de stare: " + response.statusCode());
+            }
+        } catch (IOException e) {
+            System.out.println("Exceptie la api: " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    private PersonDetailsDTO createPersonDetails(JsonNode jsonNode){
+        String id = jsonNode.get("id").asText();
+        String type = "person";
+        String name = jsonNode.get("name").asText();
+        String profilePath =  "https://image.tmdb.org/t/p/original" + jsonNode.get("profile_path").asText();
+        String biography = jsonNode.get("biography").asText();
+        String birthday = jsonNode.get("birthday").asText();
+        String placeOfBirth = jsonNode.get("place_of_birth").asText();
+
+        return new PersonDetailsDTO(id, type, name, profilePath, biography, birthday, placeOfBirth);
+    }
+
+    private String getBackdropPerson(String id){
+        String apiUrl = "https://api.themoviedb.org/3/person/" + id + "/combined_credits?language=en-US";
+
+        try {
+            HttpResponse<String> response = apiCall(apiUrl);
+            if (response != null && response.statusCode() == 200) {
+                String jsonResponse = response.body();
+
+                JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+                JsonNode resultsNode = jsonNode.get("cast");
+
+                int noOfResults = resultsNode.size();
+
+                int noPage = random.nextInt(noOfResults + 1);
+                JsonNode resultNode = resultsNode.get(noPage);
+                return "https://image.tmdb.org/t/p/original" + resultNode.get("backdrop_path").asText();
+
+            } else {
+                System.out.println("Eroare la efectuarea request-ului. Codul de stare: " + response.statusCode());
+            }
+        } catch (IOException e) {
+            System.out.println("Exceptie la api: " + e.getMessage());
+        }
+
+        return "";
+    }
+
+    @Override
+    public PersonDetailsDTO getPersonDetails(String id) {
+        String apiUrl = "https://api.themoviedb.org/3/person/" + id + "?language=en-US";
+
+        try {
+            HttpResponse<String> response = apiCall(apiUrl);
+            if (response != null && response.statusCode() == 200) {
+                String jsonResponse = response.body();
+
+                JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+
+                PersonDetailsDTO person = createPersonDetails(jsonNode);
+                person.setBackdropPath(getBackdropPerson(id));
+                return person;
+
+            }
+            else {
+                System.out.println("Eroare la efectuarea request-ului. Codul de stare: " + response.statusCode());
+            }
+        } catch (IOException e) {
+            System.out.println("Exceptie la api: " + e.getMessage());
+        }
+
+        return null;
+    }
+
     private PersonShortDTO createPersonShort(JsonNode resultNode){
         String id = resultNode.get("id").asText();
 
@@ -205,9 +324,9 @@ public class TMDBAPIService implements TMDBAPIServiceInterface {
     }
 
     @Override
-    public List<PersonShortDTO> getMovieCast(String id) {
+    public List<PersonShortDTO> getCast(String id, String type) {
         List<PersonShortDTO> lstPersons = new ArrayList<>();
-        String apiUrl = "https://api.themoviedb.org/3/movie/" + id + "/credits?language=en-US";
+        String apiUrl = "https://api.themoviedb.org/3/" + type + "/" + id + "/credits?language=en-US";
 
         try {
             HttpResponse<String> response = apiCall(apiUrl);
@@ -244,9 +363,9 @@ public class TMDBAPIService implements TMDBAPIServiceInterface {
     }
 
     @Override
-    public List<VideoDTO> getMovieVideo(String id) {
+    public List<VideoDTO> getVideo(String id, String type) {
         List<VideoDTO> lstVideos = new ArrayList<>();
-        String apiUrl = "https://api.themoviedb.org/3/movie/" + id + "/videos?language=en-US";
+        String apiUrl = "https://api.themoviedb.org/3/" + type + "/" + id + "/videos?language=en-US";
 
         try {
             HttpResponse<String> response = apiCall(apiUrl);
@@ -257,9 +376,8 @@ public class TMDBAPIService implements TMDBAPIServiceInterface {
                 JsonNode resultsNode = jsonNode.get("results");
 
                 for (JsonNode resultNode : resultsNode) {
-                    boolean officialNode = resultNode.get("official").asBoolean();
                     String site = resultNode.get("site").asText();
-                    if (officialNode && Objects.equals(site, "YouTube")){
+                    if (Objects.equals(site, "YouTube")){
                         lstVideos.add(createVideo(resultNode));
                     }
                 }
@@ -272,5 +390,33 @@ public class TMDBAPIService implements TMDBAPIServiceInterface {
         }
 
         return lstVideos;
+    }
+
+    @Override
+    public List<MovieShortDTO> getMovieCredits(String id) {
+        List<MovieShortDTO> lstMovieShort = new ArrayList<>();
+        String apiUrl = "https://api.themoviedb.org/3/person/" + id + "/combined_credits?language=en-US";
+
+        try {
+            HttpResponse<String> response = apiCall(apiUrl);
+            if (response != null && response.statusCode() == 200) {
+                String jsonResponse = response.body();
+
+                JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+                JsonNode resultsNode = jsonNode.get("cast");
+
+                for (JsonNode resultNode : resultsNode) {
+                    lstMovieShort.add(getMovieShortFromJsonNode(resultNode));
+                }
+
+
+            } else {
+                System.out.println("Eroare la efectuarea request-ului. Codul de stare: " + response.statusCode());
+            }
+        } catch (IOException e) {
+            System.out.println("Exceptie la api: " + e.getMessage());
+        }
+
+        return lstMovieShort;
     }
 }
