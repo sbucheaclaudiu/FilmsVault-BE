@@ -3,11 +3,9 @@ package server.SpotifyMovies.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import server.SpotifyMovies.dto.MoviePostDTO;
+import org.springframework.web.bind.annotation.*;
+import server.SpotifyMovies.dto.movie.MovieDeleteDTO;
+import server.SpotifyMovies.dto.movie.MoviePostDTO;
 import server.SpotifyMovies.dto.ResponseDTO;
 import server.SpotifyMovies.exceptions.CustomException;
 import server.SpotifyMovies.service.interfaces.MovieServiceInterface;
@@ -31,6 +29,18 @@ public class MovieController {
         }
         catch (Exception e){
             return ResponseEntity.ok(new ResponseDTO(false, "Something went wrong. Try again!"));
+        }
+    }
+
+    @PostMapping("/removeMovie")
+    public ResponseEntity<Boolean> removeMovie(@RequestBody MovieDeleteDTO movie) {
+        try{
+            movieService.removeMovieFromPlaylist(movie);
+            return ResponseEntity.ok(true);
+        }
+        catch (Exception e) {
+            return ResponseEntity.ok(false);
+
         }
     }
 }

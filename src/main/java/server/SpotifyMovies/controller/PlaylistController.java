@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import server.SpotifyMovies.dto.movie.MoviePlaylistDTO;
 import server.SpotifyMovies.dto.playlist.CreatePlaylistDTO;
 import server.SpotifyMovies.dto.playlist.PlaylistDTO;
+import server.SpotifyMovies.dto.playlist.UpdatePlaylistDTO;
 import server.SpotifyMovies.model.User;
 import server.SpotifyMovies.service.interfaces.PlaylistMoviesServiceInterface;
 import server.SpotifyMovies.service.interfaces.PlaylistServiceInterface;
@@ -34,6 +35,7 @@ public class PlaylistController {
             List<PlaylistDTO> lstUserPlaylist = playlistService.getPlaylistsByUser(userId);
             return ResponseEntity.ok(lstUserPlaylist);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -66,7 +68,22 @@ public class PlaylistController {
 
             return ResponseEntity.ok("Playlist created.");
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok("Failed to create playlist.");
+        }
+    }
+
+    @PostMapping("/updatePlaylist")
+    public ResponseEntity<String> updatePlaylist(@RequestBody UpdatePlaylistDTO playlist){
+        try{
+            System.out.println("ok");
+            User user = userService.getUserById(playlist.getUserId());
+            playlistService.updatePlaylist(playlist, user);
+
+            return ResponseEntity.ok("Playlist updated.");
+        } catch (Exception exception){
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok("Failed to update playlist.");
         }
     }
 
@@ -78,6 +95,16 @@ public class PlaylistController {
             return ResponseEntity.ok(playlistMoviesLst);
         } catch (Exception exception){
             return ResponseEntity.ok(new ArrayList<MoviePlaylistDTO>());
+        }
+    }
+
+    @GetMapping("/deletePlaylist")
+    public ResponseEntity<Boolean> deletePlaylist(@RequestParam Long playlistId){
+        try{
+            playlistService.deletePlaylist(playlistId);
+            return ResponseEntity.ok(true);
+        } catch (Exception exception){
+            return ResponseEntity.ok(false);
         }
     }
 }

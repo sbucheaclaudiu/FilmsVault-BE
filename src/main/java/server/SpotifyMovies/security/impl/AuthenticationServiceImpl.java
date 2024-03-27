@@ -26,12 +26,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public JwtAuthenticationResponse signup(SignupDTO request) {
-        var user = User.builder().name(request.getName()).username(request.getUsername())
+        User user = User.builder().name(request.getName()).username(request.getUsername())
                 .email(request.getEmail()).password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER).build();
+                .role(Role.USER).profile_url("").activeAccount(true).build();
 
+        user.setActiveAccount(true);
         userRepository.save(user);
-        UserDTO userDTO = new UserDTO(user.getId(), user.getUsernameReal(), user.getProfile_url());
+        UserDTO userDTO = new UserDTO(user.getId(), user.getUsernameReal(), user.getProfile_url(), user.getName(), user.getEmail());
 
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).user(userDTO).build();
@@ -44,7 +45,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
 
-        UserDTO userDTO = new UserDTO(user.getId(), user.getUsernameReal(), user.getProfile_url());
+        if (!user.getActiveAccount()){
+            throw new IllegalArgumentException("Invalid email or password.");
+        }
+
+        UserDTO userDTO = new UserDTO(user.getId(), user.getUsernameReal(), user.getProfile_url(),  user.getName(), user.getEmail());
 
         var jwt = jwtService.generateToken(user);
         return JwtAuthenticationResponse.builder().token(jwt).user(userDTO).build();

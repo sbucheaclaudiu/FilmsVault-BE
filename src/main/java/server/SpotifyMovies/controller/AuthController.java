@@ -3,6 +3,7 @@ package server.SpotifyMovies.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import server.SpotifyMovies.dto.login.UserDTO;
 import server.SpotifyMovies.model.User;
 import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
 import server.SpotifyMovies.dto.login.LoginDTO;

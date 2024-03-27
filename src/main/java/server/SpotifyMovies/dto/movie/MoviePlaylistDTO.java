@@ -18,8 +18,9 @@ public class MoviePlaylistDTO {
     private double userRating;
     private String userNote;
     private String dateAdded;
+    private Long tmdbId;
 
-    public MoviePlaylistDTO(Long movieId, String movieName, String posterPath, String type, String genres, String releaseDate, double userRating, String userNote, String dateAdded) {
+    public MoviePlaylistDTO(Long movieId, String movieName, String posterPath, String type, String genres, String releaseDate, double userRating, String userNote, String dateAdded, Long tmdbId) {
         this.movieId = movieId;
         this.movieName = movieName;
         this.posterPath = posterPath;
@@ -29,5 +30,6 @@ public class MoviePlaylistDTO {
         this.userRating = userRating;
         this.userNote = userNote;
         this.dateAdded = dateAdded;
+        this.tmdbId = tmdbId;
     }
 }

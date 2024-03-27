@@ -62,4 +62,19 @@ public class Playlist implements Serializable {
         this.user = user;
         this.imagePath = imagePath;
     }
+
+    public Playlist(Long id, String name, String description, LocalDateTime lastTimeEdit, LocalDateTime timeCreated, boolean privatePlaylist, User user, String imagePath) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.lastTimeEdit = lastTimeEdit;
+        this.timeCreated = timeCreated;
+        this.privatePlaylist = privatePlaylist;
+        this.user = user;
+        this.imagePath = imagePath;
+    }
+
+    public boolean getPrivatePlaylist(){
+        return this.privatePlaylist;
+    }
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 public class CreatePlaylistDTO {
     private String name;
     private String description;
-    private String imagePath;
+    private String imageBase64;
     private boolean privatePlaylist;
     private Long userId;
 }

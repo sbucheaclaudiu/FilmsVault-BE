@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 public class UserDTO {
     private Long id;
-
     private String username;
-
-    private String profile_url;
+    private String profileUrl;
+    private String name;
+    private String email;
 }

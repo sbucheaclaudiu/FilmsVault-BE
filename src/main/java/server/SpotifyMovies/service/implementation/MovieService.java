@@ -2,7 +2,8 @@ package server.SpotifyMovies.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import server.SpotifyMovies.dto.MoviePostDTO;
+import server.SpotifyMovies.dto.movie.MovieDeleteDTO;
+import server.SpotifyMovies.dto.movie.MoviePostDTO;
 import server.SpotifyMovies.dto.ResponseDTO;
 import server.SpotifyMovies.exceptions.CustomException;
 import server.SpotifyMovies.model.Movie;
@@ -90,6 +91,11 @@ public class MovieService implements MovieServiceInterface {
             isMovieInWatched(moviePostDTO.getMovieId(), playlist);
         }
 
+        if(playlist != null) {
+            playlist.setLastTimeEdit(LocalDateTime.now());
+            playlistRepo.save(playlist);
+        }
+
         Movie movieDB = saveMovie(moviePostDTO);
 
         boolean savePlaylistMovie = savePlaylistMovie(playlist, movieDB, moviePostDTO.getUserNote(), moviePostDTO.getUserRating() );
@@ -131,5 +137,14 @@ public class MovieService implements MovieServiceInterface {
 
         playlistMoviesRepo.save(playlistMovie);
         return isNotSaved;
+    }
+
+    @Override
+    public void removeMovieFromPlaylist(MovieDeleteDTO movie) {
+        PlaylistMovieId playlistMovieId = new PlaylistMovieId(movie.getPlaylistId(), movie.getMovieId());
+
+        if(playlistMoviesRepo.existsById(playlistMovieId)){
+            playlistMoviesRepo.deleteById(playlistMovieId);
+        }
     }
 }
