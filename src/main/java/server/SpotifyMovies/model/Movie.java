@@ -1,5 +1,6 @@
 package server.SpotifyMovies.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Movie implements Serializable {
     private Long id;
 
     @OneToMany(mappedBy = "movie")
+    @JsonIgnore
     private List<PlaylistMovie> playlistMovies;
 
     @Column
@@ -31,19 +33,29 @@ public class Movie implements Serializable {
     private String movieName;
 
     @Column
-    private long releaseYear;
+    private String releaseYear;
 
     @Column
     private String genres;
 
     @Column
-    private String userDescription;
-
-    @Column
-    private double userRating;
+    private double movieRating;
 
     @Column
     private String imagePath;
 
+    @Column
+    private String type;
+
     public Movie(){}
+
+    public Movie(Long tmdbId, String movieName, String releaseYear, String genres, double movieRating, String imagePath, String type) {
+        this.tmdbId = tmdbId;
+        this.movieName = movieName;
+        this.releaseYear = releaseYear;
+        this.genres = genres;
+        this.movieRating = movieRating;
+        this.imagePath = imagePath;
+        this.type = type;
+    }
 }

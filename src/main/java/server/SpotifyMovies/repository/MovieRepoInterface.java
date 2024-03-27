@@ -5,7 +5,10 @@ import org.springframework.stereotype.Repository;
 import server.SpotifyMovies.model.Movie;
 import server.SpotifyMovies.model.id.PlaylistMovieId;
 
-@Repository
-public interface MovieRepo extends JpaRepository<Movie, PlaylistMovieId> {
+import java.util.List;
 
+@Repository
+public interface MovieRepoInterface extends JpaRepository<Movie, Long> {
+    Movie findByTmdbId(Long tmdbId);
+    boolean existsByTmdbId(Long tmdbId);
 }

@@ -1,7 +1,7 @@
-package server.SpotifyMovies.dto;
+package server.SpotifyMovies.dto.login;
 
 import lombok.*;
-import server.SpotifyMovies.model.User;
+import server.SpotifyMovies.dto.playlist.CreatePlaylistDTO;
 
 @Data
 @Builder

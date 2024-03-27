@@ -1,4 +1,4 @@
-package server.SpotifyMovies.dto;
+package server.SpotifyMovies.dto.movie;
 
 import lombok.Data;
 import lombok.Getter;

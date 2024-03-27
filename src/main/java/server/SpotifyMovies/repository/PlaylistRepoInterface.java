@@ -9,4 +9,7 @@ import java.util.List;
 public interface PlaylistRepoInterface extends JpaRepository<Playlist, Long> {
     List<Playlist> getPlaylistByUserId(Long userId);
 
+    List<Playlist> getPlaylistByUserIdAndPrivatePlaylist(Long userId, boolean privatePlaylist);
+
+    Playlist findByUserIdAndName(Long userId, String name);
 }

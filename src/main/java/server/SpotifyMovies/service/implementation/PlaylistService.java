@@ -2,23 +2,50 @@ package server.SpotifyMovies.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import server.SpotifyMovies.dto.CreatePlaylistDTO;
+import server.SpotifyMovies.dto.playlist.CreatePlaylistDTO;
+import server.SpotifyMovies.dto.playlist.PlaylistDTO;
+import server.SpotifyMovies.exceptions.CustomException;
+import server.SpotifyMovies.mapper.ModelToDTO;
+import server.SpotifyMovies.mapper.ModelToDTOInterface;
 import server.SpotifyMovies.model.Playlist;
 import server.SpotifyMovies.model.User;
 import server.SpotifyMovies.repository.PlaylistRepoInterface;
 import server.SpotifyMovies.service.interfaces.PlaylistServiceInterface;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PlaylistService implements PlaylistServiceInterface {
     @Autowired
     private PlaylistRepoInterface playlistRepo;
 
+    private final ModelToDTOInterface modelToDTOMapper = new ModelToDTO();
+
     @Override
-    public List<Playlist> getPlaylistByUser(Long userId) {
-        return playlistRepo.getPlaylistByUserId(userId);
+    public List<PlaylistDTO> getPlaylistsByUser(Long userId) throws ParseException {
+        return modelToDTOMapper.playlistListToDTOList(playlistRepo.getPlaylistByUserId(userId));
+    }
+
+    @Override
+    public List<PlaylistDTO> getPlaylistsByUserPublic(Long userId) throws ParseException {
+        return modelToDTOMapper.playlistListToDTOList(playlistRepo.getPlaylistByUserIdAndPrivatePlaylist(userId, false));
+    }
+
+    @Override
+    public PlaylistDTO getPlaylistById(Long id) throws CustomException, ParseException {
+        Playlist playlist;
+        Optional<Playlist> optionalPlaylist = playlistRepo.findById(id);
+        if (optionalPlaylist.isPresent()) {
+            playlist = optionalPlaylist.get();
+
+        } else {
+            throw new CustomException("Playlist not found");
+        }
+
+        return modelToDTOMapper.playlistToDTO(playlist);
     }
 
     @Override

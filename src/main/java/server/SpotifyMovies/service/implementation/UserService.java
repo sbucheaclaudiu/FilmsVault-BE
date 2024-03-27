@@ -6,9 +6,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import server.SpotifyMovies.model.User;
-import server.SpotifyMovies.dto.JwtAuthenticationResponse;
-import server.SpotifyMovies.dto.SignupDTO;
-import server.SpotifyMovies.repository.UserRepo;
+import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
+import server.SpotifyMovies.dto.login.SignupDTO;
+import server.SpotifyMovies.repository.UserRepoInterface;
 import server.SpotifyMovies.service.interfaces.UserServiceInterface;
 
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 @Service
 public class UserService implements UserServiceInterface {
 
-    private final UserRepo userRepo;
+    private final UserRepoInterface userRepo;
 
     @Override
     public UserDetailsService userDetailsService() {

@@ -2,8 +2,8 @@ package server.SpotifyMovies.service.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import server.SpotifyMovies.model.User;
-import server.SpotifyMovies.dto.JwtAuthenticationResponse;
-import server.SpotifyMovies.dto.SignupDTO;
+import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
+import server.SpotifyMovies.dto.login.SignupDTO;
 
 import java.util.List;
 

@@ -5,20 +5,21 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import server.SpotifyMovies.dto.UserDTO;
+import server.SpotifyMovies.dto.login.UserDTO;
+import server.SpotifyMovies.dto.playlist.CreatePlaylistDTO;
 import server.SpotifyMovies.model.Role;
 import server.SpotifyMovies.model.User;
-import server.SpotifyMovies.dto.JwtAuthenticationResponse;
-import server.SpotifyMovies.dto.LoginDTO;
-import server.SpotifyMovies.dto.SignupDTO;
-import server.SpotifyMovies.repository.UserRepo;
+import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
+import server.SpotifyMovies.dto.login.LoginDTO;
+import server.SpotifyMovies.dto.login.SignupDTO;
+import server.SpotifyMovies.repository.UserRepoInterface;
 import server.SpotifyMovies.security.AuthenticationService;
 import server.SpotifyMovies.security.JwtService;
 
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final UserRepo userRepository;
+    private final UserRepoInterface userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;

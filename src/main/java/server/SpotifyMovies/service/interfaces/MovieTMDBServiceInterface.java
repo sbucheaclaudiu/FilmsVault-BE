@@ -1,11 +1,13 @@
 package server.SpotifyMovies.service.interfaces;
 
-import server.SpotifyMovies.dto.*;
+import server.SpotifyMovies.dto.movie.MovieDetailsDTO;
+import server.SpotifyMovies.dto.movie.MovieShortDTO;
+import server.SpotifyMovies.dto.movie.TVDetailsDTO;
+import server.SpotifyMovies.dto.movie.VideoDTO;
 
 import java.util.List;
 
-public interface TMDBAPIServiceInterface {
-
+public interface MovieTMDBServiceInterface {
     List<MovieShortDTO> searchMultiByName(String name);
 
     List<MovieShortDTO> getMovies(String apiUrl);
@@ -14,12 +16,5 @@ public interface TMDBAPIServiceInterface {
 
     TVDetailsDTO getTVDetails(String id);
 
-    PersonDetailsDTO getPersonDetails(String id);
-
-    List<PersonShortDTO> getCast(String id, String type);
-
     List<VideoDTO> getVideo(String id, String type);
-
-    List<MovieShortDTO> getMovieCredits(String id);
-
 }

@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import server.SpotifyMovies.dto.CreatePlaylistDTO;
-import server.SpotifyMovies.model.Playlist;
+import server.SpotifyMovies.dto.movie.MoviePlaylistDTO;
+import server.SpotifyMovies.dto.playlist.CreatePlaylistDTO;
+import server.SpotifyMovies.dto.playlist.PlaylistDTO;
 import server.SpotifyMovies.model.User;
+import server.SpotifyMovies.service.interfaces.PlaylistMoviesServiceInterface;
 import server.SpotifyMovies.service.interfaces.PlaylistServiceInterface;
 import server.SpotifyMovies.service.interfaces.UserServiceInterface;
 
@@ -23,13 +25,36 @@ public class PlaylistController {
     @Autowired
     private UserServiceInterface userService;
 
-    @GetMapping("/getPlaylists")
-    public ResponseEntity<List<Playlist>> getPlaylists(@RequestParam Long userId) {
+    @Autowired
+    private PlaylistMoviesServiceInterface playlistMoviesService;
+
+    @GetMapping("/getPlaylistsByUser")
+    public ResponseEntity<List<PlaylistDTO>> getPlaylistsByUser(@RequestParam Long userId) {
         try{
-            List<Playlist> lstUserPlaylist = playlistService.getPlaylistByUser(userId);
+            List<PlaylistDTO> lstUserPlaylist = playlistService.getPlaylistsByUser(userId);
             return ResponseEntity.ok(lstUserPlaylist);
         } catch (Exception exception){
             return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getPlaylistsByUserPublic")
+    public ResponseEntity<List<PlaylistDTO>> getPlaylistsByUserPublic(@RequestParam Long userId) {
+        try{
+            List<PlaylistDTO> lstUserPlaylist = playlistService.getPlaylistsByUserPublic(userId);
+            return ResponseEntity.ok(lstUserPlaylist);
+        } catch (Exception exception){
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getPlaylistById")
+    public ResponseEntity<PlaylistDTO> getPlaylistsById(@RequestParam Long id) {
+        try{
+            PlaylistDTO playlist = playlistService.getPlaylistById(id);
+            return ResponseEntity.ok(playlist);
+        } catch (Exception exception){
+            return ResponseEntity.ok(null);
         }
     }
 
@@ -42,6 +67,17 @@ public class PlaylistController {
             return ResponseEntity.ok("Playlist created.");
         } catch (Exception exception){
             return ResponseEntity.ok("Failed to create playlist.");
+        }
+    }
+
+    @GetMapping("/getMoviesFromPlaylist")
+    public ResponseEntity<List<MoviePlaylistDTO>> getMovieFromPlaylist(@RequestParam Long playlistId){
+        try{
+            List<MoviePlaylistDTO> playlistMoviesLst = playlistMoviesService.getMoviesFromPlaylist(playlistId);
+
+            return ResponseEntity.ok(playlistMoviesLst);
+        } catch (Exception exception){
+            return ResponseEntity.ok(new ArrayList<MoviePlaylistDTO>());
         }
     }
 }

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "Playlist_movies")
@@ -31,11 +30,27 @@ public class PlaylistMovie implements Serializable {
     @JoinColumn(name = "movie_id")
     Movie movie;
 
+
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateAddedToList;
 
-    public PlaylistMovie() {
+    @Column
+    private String userNote;
 
+    @Column
+    private double userRating;
+
+
+    public PlaylistMovie() {}
+
+    public PlaylistMovie(PlaylistMovieId id, Playlist playlist, Movie movie, LocalDateTime dateAddedToList, String userNote, double userRating) {
+        this.id = id;
+        this.playlist = playlist;
+        this.movie = movie;
+        this.dateAddedToList = dateAddedToList;
+        this.userNote = userNote;
+        this.userRating = userRating;
     }
+
 }

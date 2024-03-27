@@ -1,6 +1,5 @@
-package server.SpotifyMovies.dto;
+package server.SpotifyMovies.dto.login;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,5 +1,6 @@
 package server.SpotifyMovies.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Playlist implements Serializable {
     private Long id;
 
     @OneToMany(mappedBy = "playlist")
+    @JsonIgnore
     private List<PlaylistMovie> playlistMovies;
 
     @Column
