@@ -25,6 +25,7 @@ public class MovieTMDBController {
 
             return ResponseEntity.ok(movieDetailsDTO);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }
@@ -36,6 +37,7 @@ public class MovieTMDBController {
 
             return ResponseEntity.ok(tvDetailsDTO);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }
@@ -47,6 +49,7 @@ public class MovieTMDBController {
 
             return ResponseEntity.ok( lstVideoDTO.subList(0, Math.min(lstVideoDTO.size(), 6)));
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }

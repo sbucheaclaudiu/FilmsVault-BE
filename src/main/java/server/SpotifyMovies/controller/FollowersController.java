@@ -15,8 +15,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/moviesVault/followers")
-@CrossOrigin
+@RestController
 public class FollowersController {
+
     @Autowired
     private FollowersServiceInterface followersService;
 
@@ -25,7 +26,9 @@ public class FollowersController {
         try{
             List<FollowedUserDTO> lstFollowers = followersService.getFollowersByUser(userId);
             return ResponseEntity.ok(lstFollowers);
+
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -38,25 +41,30 @@ public class FollowersController {
             return ResponseEntity.ok("Start following.");
         }
         catch (CustomException exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(exception.getMessage());
         }
         catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok("Failed to follow.");
         }
     }
 
-    @DeleteMapping("/deleteFollowUser")
-    public ResponseEntity<String> deletefollowUser(@RequestBody PostFollowersDTO followUser){
+    @PostMapping ("/deleteFollower")
+    public ResponseEntity<String> deleteFollower(@RequestBody PostFollowersDTO followUser){
         try{
             followersService.deleteFollowUser(followUser);
 
-            return ResponseEntity.ok("Follower deleted successfully.");
+            return ResponseEntity.ok("Follower successfully removed.");
         }
         catch (CustomException exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(exception.getMessage());
         }
         catch (Exception exception){
-            return ResponseEntity.ok("Failed to delete.");
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok("Failed to follow.");
         }
     }
+
 }

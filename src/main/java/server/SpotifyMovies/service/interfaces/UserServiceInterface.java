@@ -2,6 +2,7 @@ package server.SpotifyMovies.service.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import server.SpotifyMovies.dto.login.UserDTO;
+import server.SpotifyMovies.dto.login.UserDetailsDTO;
 import server.SpotifyMovies.model.User;
 import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
 import server.SpotifyMovies.dto.login.SignupDTO;
@@ -20,9 +21,11 @@ public interface UserServiceInterface {
 
     User getUserById(Long id);
 
-    UserDTO getUserDTOById(Long id) throws IOException;
+    UserDetailsDTO getUserDTOById(Long id) throws IOException;
 
     void updateUser(UserDTO user) throws Exception;
 
     void deleteUser(Long userId) throws Exception;
+
+    List<UserDTO> searchUsersByUsername(String username) throws IOException;
 }

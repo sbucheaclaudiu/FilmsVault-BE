@@ -24,10 +24,12 @@ public class MovieController {
             return ResponseEntity.ok(response);
         }
         catch (CustomException e){
+            System.out.println(e.getMessage());
             return ResponseEntity.ok(new ResponseDTO(false, e.getMessage()));
 
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             return ResponseEntity.ok(new ResponseDTO(false, "Something went wrong. Try again!"));
         }
     }
@@ -39,6 +41,7 @@ public class MovieController {
             return ResponseEntity.ok(true);
         }
         catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.ok(false);
 
         }

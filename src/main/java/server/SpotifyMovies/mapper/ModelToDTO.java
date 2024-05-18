@@ -2,6 +2,7 @@ package server.SpotifyMovies.mapper;
 
 import server.SpotifyMovies.dto.follow.FollowedUserDTO;
 import server.SpotifyMovies.dto.login.UserDTO;
+import server.SpotifyMovies.dto.login.UserDetailsDTO;
 import server.SpotifyMovies.dto.playlist.PlaylistDTO;
 import server.SpotifyMovies.model.Followers;
 import server.SpotifyMovies.model.Playlist;
@@ -34,12 +35,19 @@ public class ModelToDTO implements ModelToDTOInterface{
     }
 
     @Override
-    public FollowedUserDTO followedUserToDTO(Followers followers) {
-        return new FollowedUserDTO(followers.getId().getFollowedUser().getId(), followers.getId().getFollowedUser().getUsernameReal(), followers.getId().getFollowedUser().getProfile_url());
+    public FollowedUserDTO followedUserToDTO(Followers followers) throws IOException {
+        if(!Objects.equals(followers.getId().getFollowedUser().getProfile_url(), "")){
+            return new FollowedUserDTO(followers.getId().getFollowedUser().getId(), followers.getId().getFollowedUser().getName(), utils.getImageAsBase64(followers.getId().getFollowedUser().getProfile_url()));
+
+        }
+        else{
+            return new FollowedUserDTO(followers.getId().getFollowedUser().getId(), followers.getId().getFollowedUser().getName(), followers.getId().getFollowedUser().getProfile_url());
+        }
+
     }
 
     @Override
-    public List<FollowedUserDTO> followedListToDTOList(List<Followers> lstFollowers) {
+    public List<FollowedUserDTO> followedListToDTOList(List<Followers> lstFollowers) throws IOException {
         List<FollowedUserDTO> lstfollowedUserDTO = new ArrayList<>();
 
         for(Followers followers : lstFollowers){
@@ -50,16 +58,38 @@ public class ModelToDTO implements ModelToDTOInterface{
     }
 
     @Override
+    public UserDetailsDTO userDetailsToDTO(User user) throws IOException {
+
+        if(!Objects.equals(user.getProfile_url(), "")){
+            return new UserDetailsDTO(user.getId(), user.getUsernameReal(), utils.getImageAsBase64(user.getProfile_url()), user.getName(), user.getEmail());
+
+        }
+        else{
+            return new UserDetailsDTO(user.getId(), user.getUsernameReal(), user.getProfile_url(), user.getName(), user.getEmail());
+        }
+    }
+
+    @Override
     public UserDTO userToDTO(User user) throws IOException {
-        System.out.println(user.getProfile_url());
+
         if(!Objects.equals(user.getProfile_url(), "")){
             return new UserDTO(user.getId(), user.getUsernameReal(), utils.getImageAsBase64(user.getProfile_url()), user.getName(), user.getEmail());
 
         }
         else{
             return new UserDTO(user.getId(), user.getUsernameReal(), user.getProfile_url(), user.getName(), user.getEmail());
-
         }
+    }
+
+    @Override
+    public List<UserDTO> userListToDTOList(List<User> lstUsers) throws IOException {
+        List<UserDTO> lstUsersDTO = new ArrayList<>();
+
+        for(User user : lstUsers){
+            lstUsersDTO.add(userToDTO(user));
+        }
+
+        return lstUsersDTO;
     }
 
 

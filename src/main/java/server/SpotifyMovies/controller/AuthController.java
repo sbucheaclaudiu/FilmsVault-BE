@@ -57,6 +57,7 @@ public class AuthController {
             return ResponseEntity.ok(jwt);
         }
         catch (Exception e){
+            System.out.println(e.getMessage());
             JwtAuthenticationResponse jwt = new JwtAuthenticationResponse();
             jwt.setValidData(false);
 

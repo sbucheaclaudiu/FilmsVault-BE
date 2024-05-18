@@ -3,6 +3,7 @@ package server.SpotifyMovies.service.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import server.SpotifyMovies.dto.follow.FollowedUserDTO;
+import server.SpotifyMovies.dto.follow.LastMovieAddDetailsDTO;
 import server.SpotifyMovies.dto.follow.PostFollowersDTO;
 import server.SpotifyMovies.exceptions.CustomException;
 import server.SpotifyMovies.mapper.JsonNodeToDTO;
@@ -19,6 +20,7 @@ import server.SpotifyMovies.repository.PlaylistRepoInterface;
 import server.SpotifyMovies.repository.UserRepoInterface;
 import server.SpotifyMovies.service.interfaces.FollowersServiceInterface;
 
+import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -35,42 +37,47 @@ public class FollowersService implements FollowersServiceInterface {
 
     private final ModelToDTOInterface modelToDTOMapper = new ModelToDTO();
 
-    private String getLastMovieWatchedFromUser(Long userId){
+    private LastMovieAddDetailsDTO getLastMovieWatchedFromUser(Long userId){
         Playlist watchedPlaylist = playlistRepo.findByUserIdAndName(userId, "Watched");
 
         List<PlaylistMovie> playlistMovies = watchedPlaylist.getPlaylistMovies();
         playlistMovies.sort(Comparator.comparing(PlaylistMovie::getDateAddedToList).reversed());
 
         if (!playlistMovies.isEmpty()) {
-            return playlistMovies.get(0).getMovie().getMovieName();
+            return new LastMovieAddDetailsDTO(playlistMovies.get(0).getMovie().getMovieName(), playlistMovies.get(0).getMovie().getTmdbId(), playlistMovies.get(0).getMovie().getType());
         }
 
-        return "";
+        return new LastMovieAddDetailsDTO("", 0L, "");
     }
 
-    private String getLastMovieWatchlistFromUser(Long userId){
+    private LastMovieAddDetailsDTO getLastMovieWatchlistFromUser(Long userId){
         Playlist watchedPlaylist = playlistRepo.findByUserIdAndName(userId, "Watchlist");
 
         List<PlaylistMovie> playlistMovies = watchedPlaylist.getPlaylistMovies();
         playlistMovies.sort(Comparator.comparing(PlaylistMovie::getDateAddedToList).reversed());
 
         if (!playlistMovies.isEmpty()) {
-            return playlistMovies.get(0).getMovie().getMovieName();
+            return new LastMovieAddDetailsDTO(playlistMovies.get(0).getMovie().getMovieName(), playlistMovies.get(0).getMovie().getTmdbId(), playlistMovies.get(0).getMovie().getType());
         }
 
-        return "";
+        return  new LastMovieAddDetailsDTO("", 0L, "");
     }
     @Override
-    public List<FollowedUserDTO> getFollowersByUser(Long userId) {
-        List<FollowedUserDTO> lst = modelToDTOMapper.followedListToDTOList(followersRepo.findAllById_User_Id(userId));
+    public List<FollowedUserDTO> getFollowersByUser(Long userId) throws IOException {
+        List<FollowedUserDTO> lst = modelToDTOMapper.followedListToDTOList(followersRepo.findAllActiveByIdUserId(userId));
 
         for(FollowedUserDTO followedUserDTO : lst){
-            String lastMovieWatched = getLastMovieWatchedFromUser(followedUserDTO.getId());
-            followedUserDTO.setLastMovieWatched(lastMovieWatched);
+            LastMovieAddDetailsDTO lastMovieWatched = getLastMovieWatchedFromUser(followedUserDTO.getId());
+            followedUserDTO.setLastWatchedName(lastMovieWatched.getName());
+            followedUserDTO.setLastWatchedTmdbId(lastMovieWatched.getTmdbId());
+            followedUserDTO.setLastWatchedType(lastMovieWatched.getType());
 
-            String lastMovieWatchlist = getLastMovieWatchlistFromUser(followedUserDTO.getId());
-            followedUserDTO.setLastMovieWatchlist(lastMovieWatchlist);
+            LastMovieAddDetailsDTO lastMovieWatchlist = getLastMovieWatchlistFromUser(followedUserDTO.getId());
+            followedUserDTO.setLastWatchlistName(lastMovieWatchlist.getName());
+            followedUserDTO.setLastWatchlistTmdbId(lastMovieWatchlist.getTmdbId());
+            followedUserDTO.setLastWatchlistType(lastMovieWatchlist.getType());
         }
+
         return lst;
     }
 

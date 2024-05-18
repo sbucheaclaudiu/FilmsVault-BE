@@ -56,6 +56,7 @@ public class PlaylistController {
             PlaylistDTO playlist = playlistService.getPlaylistById(id);
             return ResponseEntity.ok(playlist);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }
@@ -94,6 +95,7 @@ public class PlaylistController {
 
             return ResponseEntity.ok(playlistMoviesLst);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<MoviePlaylistDTO>());
         }
     }
@@ -104,6 +106,7 @@ public class PlaylistController {
             playlistService.deletePlaylist(playlistId);
             return ResponseEntity.ok(true);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(false);
         }
     }

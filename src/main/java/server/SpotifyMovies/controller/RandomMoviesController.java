@@ -34,6 +34,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(lstPopularMovies.subList(0, Math.min(lstPopularMovies.size(), 12)));
         }
         catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -47,6 +48,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(lstPopularMovies);
         }
         catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -59,6 +61,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(lstPopularMovies);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -71,6 +74,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(lstTrendingMovies);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -84,6 +88,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(trendingTvShows);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -97,6 +102,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(trendingTvShows);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -110,6 +116,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(trendingTvShows);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -124,6 +131,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(trendingTvShows);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }
@@ -138,6 +146,7 @@ public class RandomMoviesController {
             return ResponseEntity.ok(lstPersonShort);
         }
         catch (Exception exception) {
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(new ArrayList<>());
         }
     }

@@ -28,6 +28,7 @@ public class PersonTMDBController {
 
             return ResponseEntity.ok(personDetailsDTO);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }
@@ -39,6 +40,7 @@ public class PersonTMDBController {
 
             return ResponseEntity.ok(movieDetailsDTO);
         } catch (Exception exception){
+            System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
         }
     }

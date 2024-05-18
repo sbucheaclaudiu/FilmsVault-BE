@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import server.SpotifyMovies.dto.login.UserDTO;
+import server.SpotifyMovies.dto.login.UserDetailsDTO;
 import server.SpotifyMovies.dto.playlist.PlaylistDTO;
 import server.SpotifyMovies.service.interfaces.UserServiceInterface;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -38,10 +40,21 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public ResponseEntity<UserDTO> getUserById(@RequestParam Long userId) {
+    public ResponseEntity<UserDetailsDTO> getUserById(@RequestParam Long userId) {
         try {
-            UserDTO user = userService.getUserDTOById(userId);
+            UserDetailsDTO user = userService.getUserDTOById(userId);
             return ResponseEntity.ok(user);
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/searchUsersByUsername")
+    public ResponseEntity<List<UserDTO>> searchUsersByUsername(@RequestParam String username) {
+        try {
+            List<UserDTO> users = userService.searchUsersByUsername(username);
+            return ResponseEntity.ok(users);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);

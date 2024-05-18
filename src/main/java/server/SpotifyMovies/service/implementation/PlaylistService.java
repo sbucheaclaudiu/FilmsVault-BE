@@ -85,7 +85,6 @@ public class PlaylistService implements PlaylistServiceInterface {
                 }
 
                 String savedFilePath = file.getAbsolutePath();
-                System.out.println("Imaginea a fost salvată la: " + savedFilePath);
 
                 Playlist playlist = new Playlist(playlistDTO.getName(), playlistDTO.getDescription(), LocalDateTime.now(), LocalDateTime.now(), playlistDTO.isPrivatePlaylist(), user, savedFilePath);
 
@@ -103,15 +102,40 @@ public class PlaylistService implements PlaylistServiceInterface {
     @Override
     public void updatePlaylist(UpdatePlaylistDTO updatePlaylistDTO, User user) throws Exception {
 
-        Optional<Playlist> playlistOptional = playlistRepo.findById(updatePlaylistDTO.getPlaylistId());
+        String base64Image = updatePlaylistDTO.getImagePath();
 
-        if (playlistOptional.isPresent()) {
-            Playlist playlistFound = playlistOptional.get();
-            Playlist playlist = new Playlist(updatePlaylistDTO.getPlaylistId(), updatePlaylistDTO.getName(), updatePlaylistDTO.getDescription(), playlistFound.getLastTimeEdit(), playlistFound.getTimeCreated(), updatePlaylistDTO.isPrivatePlaylist(), user, updatePlaylistDTO.getImagePath());
-            playlistRepo.save(playlist);
-        }
-        else{
-            throw new Exception("Playlist not found.");
+        if (!StringUtils.isEmpty(base64Image)) {
+            try {
+                byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+
+                String uploadsDir = "/Users/sbucheaclaudiu/IdeaProjects/SpotifyMovies/src/main/resources/Images";
+
+                String filename = "image_" + System.currentTimeMillis() + "_" + (int)(Math.random() * 1000) + ".jpg";
+
+                // Creează fișierul și salvează imaginea
+                File file = new File(uploadsDir, filename);
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    fos.write(imageBytes);
+                }
+
+                String savedFilePath = file.getAbsolutePath();
+
+                Optional<Playlist> playlistOptional = playlistRepo.findById(updatePlaylistDTO.getPlaylistId());
+
+                if (playlistOptional.isPresent()) {
+                    Playlist playlistFound = playlistOptional.get();
+                    Playlist playlist = new Playlist(updatePlaylistDTO.getPlaylistId(), updatePlaylistDTO.getName(), updatePlaylistDTO.getDescription(), playlistFound.getLastTimeEdit(), playlistFound.getTimeCreated(), updatePlaylistDTO.isPrivatePlaylist(), user, savedFilePath);
+                    playlistRepo.save(playlist);
+                }
+                else{
+                    throw new Exception("Playlist not found.");
+                }
+
+            } catch (IOException e) {
+                throw new Exception("Eroare la încărcarea imaginii: " + e.getMessage());
+            }
+        } else {
+            throw new Exception("Nu a fost selectată nicio imagine pentru încărcare");
         }
     }
 

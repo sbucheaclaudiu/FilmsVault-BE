@@ -7,12 +7,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import server.SpotifyMovies.dto.login.UserDTO;
+import server.SpotifyMovies.dto.login.UserDetailsDTO;
 import server.SpotifyMovies.mapper.ModelToDTO;
 import server.SpotifyMovies.mapper.ModelToDTOInterface;
 import server.SpotifyMovies.model.Playlist;
 import server.SpotifyMovies.model.User;
 import server.SpotifyMovies.dto.login.JwtAuthenticationResponse;
 import server.SpotifyMovies.dto.login.SignupDTO;
+import server.SpotifyMovies.repository.FollowersRepoInterface;
 import server.SpotifyMovies.repository.UserRepoInterface;
 import server.SpotifyMovies.service.interfaces.UserServiceInterface;
 
@@ -31,6 +33,8 @@ import java.util.regex.Pattern;
 public class UserService implements UserServiceInterface {
 
     private final UserRepoInterface userRepo;
+
+    private final FollowersRepoInterface followersRepo;
 
     private final ModelToDTOInterface modelToDTOMapper = new ModelToDTO();
 
@@ -89,8 +93,19 @@ public class UserService implements UserServiceInterface {
     }
 
     @Override
-    public UserDTO getUserDTOById(Long id) throws IOException {
-        return modelToDTOMapper.userToDTO(userRepo.findById(id).orElse(null));
+    public UserDetailsDTO getUserDTOById(Long id) throws IOException {
+        UserDetailsDTO user =  modelToDTOMapper.userDetailsToDTO(userRepo.findById(id).orElse(null));
+
+        int noPublicPlaylists = userRepo.countPublicPlaylistsByUserId(id);
+        user.setNoPublicPlaylists(noPublicPlaylists);
+
+        int noFollowers = followersRepo.countFollowersByUserId(id);
+        user.setNoFollowers(noFollowers);
+
+        int noFollowing = followersRepo.countFollowingByUserId(id);
+        user.setNoFollowing(noFollowing);
+
+        return user;
     }
 
     @Override
@@ -188,6 +203,13 @@ public class UserService implements UserServiceInterface {
         else{
             throw new Exception("User with id: " + userId + " not found.");
         }
+    }
+
+    @Override
+    public List<UserDTO> searchUsersByUsername(String username) throws IOException {
+        List<User> lstUsers = userRepo.findByUsernameContainingAndActiveAccountIsTrue(username);
+
+        return modelToDTOMapper.userListToDTOList(lstUsers);
     }
 
 

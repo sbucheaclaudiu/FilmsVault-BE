@@ -11,14 +11,18 @@ import lombok.Setter;
 @Setter
 public class FollowedUserDTO {
     private Long id;
-    private String username;
+    private String name;
     private String profile_url;
-    private String lastMovieWatched;
-    private String lastMovieWatchlist;
+    private String lastWatchedName;
+    private Long lastWatchedTmdbId;
+    private String lastWatchedType;
+    private String lastWatchlistName;
+    private Long lastWatchlistTmdbId;
+    private String lastWatchlistType;
 
-    public FollowedUserDTO(Long id, String username, String profile_url) {
+    public FollowedUserDTO(Long id, String name, String profile_url) {
         this.id = id;
-        this.username = username;
+        this.name = name;
         this.profile_url = profile_url;
     }
 }
