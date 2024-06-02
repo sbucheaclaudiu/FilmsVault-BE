@@ -110,4 +110,26 @@ public class PlaylistController {
             return ResponseEntity.ok(false);
         }
     }
+
+    @GetMapping("/getRandomPlaylists")
+    public ResponseEntity<List<PlaylistDTO>> getRandomPlaylists(@RequestParam Long userId) {
+        try{
+            List<PlaylistDTO> lstUserPlaylist = playlistService.getRandomPlaylists(userId);
+            return ResponseEntity.ok(lstUserPlaylist);
+        } catch (Exception exception){
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/getPlaylistsByName")
+    public ResponseEntity<List<PlaylistDTO>> getPlaylistsByName(@RequestParam String name) {
+        try{
+            List<PlaylistDTO> lstUserPlaylist = playlistService.getPlaylistByName(name);
+            return ResponseEntity.ok(lstUserPlaylist);
+        } catch (Exception exception){
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok(new ArrayList<>());
+        }
+    }
 }

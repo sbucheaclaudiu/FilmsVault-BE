@@ -15,6 +15,10 @@ public interface PlaylistServiceInterface {
 
     List<PlaylistDTO> getPlaylistsByUserPublic(Long userId) throws ParseException, IOException;
 
+    List<PlaylistDTO> getRandomPlaylists(Long userId) throws ParseException, IOException;
+
+    List<PlaylistDTO> getPlaylistByName(String name) throws ParseException, IOException;
+
     PlaylistDTO getPlaylistById(Long id) throws CustomException, ParseException, IOException;
 
     void createDefaultPlaylists(User user);
@@ -24,4 +28,5 @@ public interface PlaylistServiceInterface {
     void updatePlaylist(UpdatePlaylistDTO updatePlaylistDTO, User user) throws Exception;
 
     void deletePlaylist(Long playlistId);
+
 }

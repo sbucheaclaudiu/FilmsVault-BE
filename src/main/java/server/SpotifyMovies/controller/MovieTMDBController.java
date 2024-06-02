@@ -5,10 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import server.SpotifyMovies.dto.movie.MovieDetailsDTO;
+import server.SpotifyMovies.dto.movie.MovieShortDTO;
 import server.SpotifyMovies.dto.movie.TVDetailsDTO;
 import server.SpotifyMovies.dto.movie.VideoDTO;
 import server.SpotifyMovies.service.interfaces.MovieTMDBServiceInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -51,6 +53,18 @@ public class MovieTMDBController {
         } catch (Exception exception){
             System.out.println(exception.getMessage());
             return ResponseEntity.ok(null);
+        }
+    }
+
+    @GetMapping("/getRecommendations")
+    public ResponseEntity<List<MovieShortDTO>> getRecommendations(@RequestParam String title){
+        try{
+            List<MovieShortDTO> recommendationsMovies = movieTMDBServiceInterface.getRecommendations(title);
+
+            return ResponseEntity.ok(recommendationsMovies);
+        } catch (Exception exception){
+            System.out.println(exception.getMessage());
+            return ResponseEntity.ok(new ArrayList<>());
         }
     }
 

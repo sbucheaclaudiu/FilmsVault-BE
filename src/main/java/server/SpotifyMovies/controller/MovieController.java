@@ -34,6 +34,23 @@ public class MovieController {
         }
     }
 
+    @PostMapping("/moveMovieToWatched")
+    public ResponseEntity<ResponseDTO> moveMovieToWatched(@RequestBody MoviePostDTO movie) {
+        try{
+            ResponseDTO response = movieService.addMovieToPlaylist(movie);
+            return ResponseEntity.ok(response);
+        }
+        catch (CustomException e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok(new ResponseDTO(false, e.getMessage()));
+
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.ok(new ResponseDTO(false, "Something went wrong. Try again!"));
+        }
+    }
+
     @PostMapping("/removeMovie")
     public ResponseEntity<Boolean> removeMovie(@RequestBody MovieDeleteDTO movie) {
         try{

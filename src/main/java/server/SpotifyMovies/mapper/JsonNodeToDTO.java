@@ -12,6 +12,7 @@ import server.SpotifyMovies.dto.person.PersonShortDTO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class JsonNodeToDTO implements JsonNodeToDTOInterface{
     @Override
@@ -195,5 +196,10 @@ public class JsonNodeToDTO implements JsonNodeToDTOInterface{
         String videoPath = resultNode.get("key").asText();
 
         return new VideoDTO(id, videoPath);
+    }
+
+    @Override
+    public List<String> createListRecomendtions(String resultNode) {
+        return null;
     }
 }

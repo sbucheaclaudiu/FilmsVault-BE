@@ -11,8 +11,11 @@ import server.SpotifyMovies.mapper.JsonNodeToDTO;
 import server.SpotifyMovies.mapper.JsonNodeToDTOInterface;
 import server.SpotifyMovies.service.interfaces.MovieTMDBServiceInterface;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -27,6 +30,9 @@ public class MovieTMDBService implements MovieTMDBServiceInterface {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final JsonNodeToDTOInterface jsonMapper = new JsonNodeToDTO();
     private final Random random = new Random();
+
+    private static final String pythonServerURL = "http://127.0.0.1:5000/recommend";
+
 
     private HttpResponse<String> apiCall(String apiUrl) {
         try {
@@ -104,6 +110,60 @@ public class MovieTMDBService implements MovieTMDBServiceInterface {
         }
 
         return lstPopularMovies;
+    }
+
+    private List<String> getRecommendationsForMovie(String title) throws IOException {
+        String query = String.format("?title=%s", java.net.URLEncoder.encode(title, "UTF-8"));
+        URL url = new URL(pythonServerURL + query);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+
+        if (connection.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + connection.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+
+        StringBuilder sb = new StringBuilder();
+        String output;
+        while ((output = br.readLine()) != null) {
+            sb.append(output);
+        }
+        connection.disconnect();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(sb.toString());
+        JsonNode recommendationsNode = jsonNode.get("recommendations");
+
+        List<String> recommendations = new ArrayList<>();
+        if (recommendationsNode != null && recommendationsNode.isArray()) {
+            for (JsonNode node : recommendationsNode) {
+                recommendations.add(node.asText());
+
+            }
+        }
+
+        return recommendations;
+    }
+
+    @Override
+    public List<MovieShortDTO> getRecommendations(String title) throws IOException {
+        List<String> lstRecommendationsTitle = getRecommendationsForMovie(title);
+
+        List<MovieShortDTO> lstMoviesRecommedations = new ArrayList<>();
+
+        for (String movieTitle : lstRecommendationsTitle){
+            List<MovieShortDTO> results = searchMultiByName(movieTitle);
+            if (results != null && !results.isEmpty()) {
+                MovieShortDTO movie =  results.get(0);
+                lstMoviesRecommedations.add(movie);
+            }
+        }
+
+        return lstMoviesRecommedations;
     }
 
     @Override

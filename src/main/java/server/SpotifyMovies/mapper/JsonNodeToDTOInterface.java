@@ -10,6 +10,7 @@ import server.SpotifyMovies.dto.person.PersonDetailsDTO;
 import server.SpotifyMovies.dto.person.PersonShortDTO;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface JsonNodeToDTOInterface {
     MovieShortDTO createMovieShort(JsonNode resultNode);
@@ -19,4 +20,5 @@ public interface JsonNodeToDTOInterface {
     PersonCastDTO createPersonCast(JsonNode resultNode);
     PersonShortDTO createPersonShort(JsonNode resultNode);
     VideoDTO createVideo(JsonNode resultNode);
+    List<String> createListRecomendtions(String resultNode);
 }

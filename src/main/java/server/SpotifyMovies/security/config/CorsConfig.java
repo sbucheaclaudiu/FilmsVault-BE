@@ -9,8 +9,8 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/moviesVault/followers/**")
-                .allowedOrigins("http://localhost:3002")
-                .allowedMethods("GET", "POST", "DELETE"); // Specificați metodele pe care doriți să le permiteți
+                .allowedOrigins("http://localhost:3002", "http://localhost:3001", "http://localhost:3000", "http://localhost:3003")
+                .allowedMethods("GET", "POST", "DELETE");
     }
 }
 

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,22 @@ public class PlaylistService implements PlaylistServiceInterface {
     @Override
     public List<PlaylistDTO> getPlaylistsByUserPublic(Long userId) throws ParseException, IOException {
         return modelToDTOMapper.playlistListToDTOList(playlistRepo.getPlaylistByUserIdAndPrivatePlaylist(userId, false));
+    }
+
+    @Override
+    public List<PlaylistDTO> getRandomPlaylists(Long userId) throws ParseException, IOException {
+        List<PlaylistDTO> lstPlaylists =  modelToDTOMapper.playlistListToDTOList(playlistRepo.findFilteredPlaylistsByUserId(userId));
+
+        Collections.shuffle(lstPlaylists);
+
+        return lstPlaylists.subList(0, Math.min(lstPlaylists.size(), 8));
+    }
+
+    @Override
+    public List<PlaylistDTO> getPlaylistByName(String name) throws ParseException, IOException {
+        List<PlaylistDTO> lstPlaylists = modelToDTOMapper.playlistListToDTOList(playlistRepo.findPublicPlaylistsByNameContaining(name));
+
+        return lstPlaylists.subList(0, Math.min(lstPlaylists.size(), 8));
     }
 
     @Override
